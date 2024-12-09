@@ -57,17 +57,12 @@ class PokemonListViewController: UIViewController {
     }
     
     private func fetchLocalCards() {
-        print("fetchLocalCards")
-        
         let storedCards = CoreDataManager.shared.fetchPokemonCards()
         pokemonCards = storedCards.map { Card(from: $0) }
         tableView.reloadData()
-
     }
     
     private func fetchAPICards() {
-        print("fetchAPICards")
-
         APIManager.shared.fetchCards { [weak self] cards in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -86,32 +81,70 @@ class PokemonListViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    private func showSuccessAlert(message: String) {
+        let alert = UIAlertController(title: "Success", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func isCardStored(_ card: Card) -> Bool {
+        let storedCards = CoreDataManager.shared.fetchPokemonCards()
+        return storedCards.contains { $0.id == card.id }
+    }
+    
+    @objc private func handleButtonTapped(_ sender: UIButton) {
+        let index = sender.tag
+        let selectedCard = pokemonCards[index]
+        
+        if source == .api {
+            // Add Pokémon card to local storage
+            if !isCardStored(selectedCard) {
+                CoreDataManager.shared.savePokemonCard(
+                    id: selectedCard.id,
+                    name: selectedCard.name,
+                    imageURLSmall: selectedCard.images.small,
+                    imageURLLarge: selectedCard.images.large
+                )
+                showSuccessAlert(message: "\(selectedCard.name) was added to storage!")
+                tableView.reloadData()
+            }
+        } else {
+            // Remove Pokémon card from local storage
+            CoreDataManager.shared.deletePokemonCard(id: selectedCard.id)
+            pokemonCards.remove(at: index)
+            tableView.reloadData()
+            showSuccessAlert(message: "\(selectedCard.name) was removed from storage!")
+        }
+    }
 }
-
-//extension PokemonListViewController: UITableViewDataSource, UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return pokemonCards.count
-//    }
-//    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "PokemonCell", for: indexPath)
-//        let card = pokemonCards[indexPath.row]
-//        cell.textLabel?.text = card.name
-//        cell.imageView?.loadImage(from: card.images.small)
-//        return cell
-//    }
-//}
 
 extension PokemonListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pokemonCards.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PokemonCell", for: indexPath)
         let card = pokemonCards[indexPath.row]
+        
         cell.textLabel?.text = card.name
         cell.imageView?.loadImage(from: card.images.small)
+        
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 44)
+        button.tag = indexPath.row
+        
+        if source == .api {
+            button.setTitle(isCardStored(card) ? "Stored" : "Add", for: .normal)
+            button.isEnabled = !isCardStored(card)
+        } else {
+            button.setTitle("Remove", for: .normal)
+        }
+        
+        button.addTarget(self, action: #selector(handleButtonTapped(_:)), for: .touchUpInside)
+        cell.accessoryView = button
+        
         return cell
     }
     
@@ -123,7 +156,6 @@ extension PokemonListViewController: UITableViewDataSource, UITableViewDelegate 
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
-
 
 extension UIImageView {
     func loadImage(from urlString: String) {
@@ -137,6 +169,3 @@ extension UIImageView {
         }
     }
 }
-
-
-

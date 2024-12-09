@@ -3,6 +3,7 @@
     <entity name="StoredPokemonCard" representedClassName=".StoredPokemonCard" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="imageURLLarge" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
 </model>

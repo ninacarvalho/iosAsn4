@@ -37,13 +37,15 @@ class CoreDataManager {
     }
     
     //create
-    func savePokemonCard(id: String, name: String, imageURL: String) {
+    func savePokemonCard(id: String, name: String, imageURLSmall: String, imageURLLarge: String) {
         let card = StoredPokemonCard(context: context)
         card.id = id
         card.name = name
-        card.imageURL = imageURL
+        card.imageURL = imageURLSmall
+        card.imageURLLarge = imageURLLarge
         saveContext()
     }
+
     
     //read
     func fetchPokemonCards() -> [StoredPokemonCard] {

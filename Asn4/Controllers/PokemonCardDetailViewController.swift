@@ -81,10 +81,20 @@ class PokemonCardDetailViewController: UIViewController {
     private func updateDetails() {
         guard let pokemonCard = pokemonCard else { return }
         pokemonNameLabel.text = pokemonCard.name
+
+        // Use the large image URL
         if let imageUrl = URL(string: pokemonCard.images.large) {
             loadImage(from: imageUrl)
+        } else {
+            // Fallback: Use small image or a placeholder
+            if let fallbackUrl = URL(string: pokemonCard.images.small) {
+                loadImage(from: fallbackUrl)
+            } else {
+                pokemonImageView.image = UIImage(named: "placeholder")
+            }
         }
     }
+
 
     private func loadImage(from url: URL) {
         DispatchQueue.global().async {

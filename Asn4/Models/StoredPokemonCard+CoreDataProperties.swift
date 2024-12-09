@@ -18,6 +18,7 @@ extension StoredPokemonCard {
 
     @NSManaged public var id: String?
     @NSManaged public var imageURL: String?
+    @NSManaged public var imageURLLarge: String?
     @NSManaged public var name: String?
 
 }
@@ -30,7 +31,9 @@ extension Card {
     init(from storedCard: StoredPokemonCard) {
         self.id = storedCard.id ?? ""
         self.name = storedCard.name ?? ""
-        self.images = Images(small: storedCard.imageURL ?? "", large: "")
+        self.images = Images(
+            small: storedCard.imageURL ?? "",
+            large: storedCard.imageURLLarge ?? ""
+        )
     }
 }
-
