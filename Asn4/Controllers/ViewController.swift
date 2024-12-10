@@ -35,7 +35,6 @@ class ViewController: UIViewController {
 
         setupLayout()
         
-//        FetchCards()
     }
     
     @objc func showPokemonStorage() {
@@ -91,24 +90,6 @@ class ViewController: UIViewController {
         myButton.layer.shadowOffset = CGSize(width: 3, height: 3)
         myButton.layer.shadowRadius = 4
     }
-
-    fileprivate func FetchCards() {
-        // Fetch Pokémon cards
-        var i = 1
-        APIManager.shared.fetchCards { cards in
-            if let cards = cards {
-                for card in cards { // Print the first 5 cards
-                    print("\(i) Card Name: \(card.name), Image URL: \(card.images.small)")
-                    i += 1
-                }
-            } else {
-                print("Failed to fetch cards.")
-            }
-        }
-    }
-    
-    
-    
     
 }
 

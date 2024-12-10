@@ -100,11 +100,25 @@ class PokemonListViewController: UIViewController {
         if source == .api {
             // Add Pokémon card to local storage
             if !isCardStored(selectedCard) {
+                
+                let encoder = JSONEncoder()
+                let weaknessesJSON: String?
+                if let weaknesses = selectedCard.weaknesses,
+                   let jsonData = try? encoder.encode(weaknesses) {
+                    weaknessesJSON = String(data: jsonData, encoding: .utf8)
+                } else {
+                    weaknessesJSON = nil
+                }
+                
                 CoreDataManager.shared.savePokemonCard(
                     id: selectedCard.id,
                     name: selectedCard.name,
                     imageURLSmall: selectedCard.images.small,
-                    imageURLLarge: selectedCard.images.large
+                    imageURLLarge: selectedCard.images.large,
+                    hp: selectedCard.hp,
+                    types: selectedCard.types,
+                    evolvesFrom: selectedCard.evolvesFrom,
+                    weaknesses: weaknessesJSON
                 )
                 showSuccessAlert(message: "\(selectedCard.name) was added to storage!")
                 tableView.reloadData()

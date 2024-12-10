@@ -20,6 +20,10 @@ extension StoredPokemonCard {
     @NSManaged public var imageURL: String?
     @NSManaged public var imageURLLarge: String?
     @NSManaged public var name: String?
+    @NSManaged public var hp: String?
+    @NSManaged public var types: [String]?
+    @NSManaged public var evolvesFrom: String?
+    @NSManaged public var weaknesses: String?
 
 }
 
@@ -35,5 +39,17 @@ extension Card {
             small: storedCard.imageURL ?? "",
             large: storedCard.imageURLLarge ?? ""
         )
+        self.hp = storedCard.hp
+        self.types = storedCard.types
+        self.evolvesFrom = storedCard.evolvesFrom
+        
+        //decoding Json
+        if let weaknessesJSON = storedCard.weaknesses {
+            let decoder = JSONDecoder()
+            self.weaknesses = try? decoder.decode([Weakness].self, from: Data(weaknessesJSON.utf8))
+        } else {
+            self.weaknesses = nil
+        }
     }
 }
+
