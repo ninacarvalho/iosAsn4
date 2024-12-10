@@ -51,9 +51,9 @@ class APIManager {
             }
             
             // Print raw JSON for debugging
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Raw JSON: \(jsonString)")
-            }
+//            if let jsonString = String(data: data, encoding: .utf8) {
+//                print("Raw JSON: \(jsonString)")
+//            }
 
             do {
                 // Decode JSON into Card objects

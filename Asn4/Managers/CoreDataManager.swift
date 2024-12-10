@@ -53,8 +53,16 @@ class CoreDataManager {
         card.imageURL = imageURLSmall
         card.imageURLLarge = imageURLLarge
         card.hp = hp
-        card.types = types
         card.evolvesFrom = evolvesFrom
+
+        // Encode types to JSON string
+        if let types = types {
+            let encoder = JSONEncoder()
+            if let jsonData = try? encoder.encode(types) {
+                card.types = String(data: jsonData, encoding: .utf8)
+            }
+        }
+
         card.weaknesses = weaknesses
         saveContext()
     }
