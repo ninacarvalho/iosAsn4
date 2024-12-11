@@ -21,6 +21,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         
         pokemonStorageButton = createButton(withTitle: "Pokémon Storage")
         pokedexButton = createButton(withTitle: "Pokédex")

@@ -33,7 +33,7 @@ class APIManager {
         // Create a URL request
        var request = URLRequest(url: url)
        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-       request.setValue(apiKey, forHTTPHeaderField: "X-Api-Key") // Add the API key header
+       request.setValue(apiKey, forHTTPHeaderField: "X-Api-Key")
 
 
         // Perform the request
@@ -58,12 +58,12 @@ class APIManager {
             do {
                 // Decode JSON into Card objects
                 let decodedResponse = try JSONDecoder().decode(CardResponse.self, from: data)
-                let cards = decodedResponse.data // The key `data` contains the cards array
+                let cards = decodedResponse.data
                 completion(cards)
             } catch {
                 print("Error decoding JSON: \(error.localizedDescription)")
                 completion(nil)
             }
-        }.resume() // Start the network request
+        }.resume()
     }
 }
